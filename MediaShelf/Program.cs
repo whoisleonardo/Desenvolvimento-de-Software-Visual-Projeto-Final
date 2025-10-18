@@ -122,6 +122,51 @@ app.MapPatch("/users/alterar/{id:int}", ([FromRoute] int id, [FromBody] User usu
 	return Results.Ok(resultado);
 });
 
+// ==================== ENDPOINT DE LOGIN ====================
+
+app.MapPost("/users/login", ([FromBody] LoginRequest loginRequest, [FromServices] AppDataContext ctx) =>
+{
+	// Validação dos dados de entrada
+	var validationResults = new List<ValidationResult>();
+	var validationContext = new ValidationContext(loginRequest);
+	if (!Validator.TryValidateObject(loginRequest, validationContext, validationResults, true))
+	{
+		var errors = validationResults.Select(v => v.ErrorMessage).ToArray();
+		return Results.BadRequest(new { errors });
+	}
+
+	// Buscar usuário pelo email
+	var user = ctx.Usuarios?.FirstOrDefault(u => u.Email == loginRequest.Email);
+	if (user == null)
+	{
+		return Results.BadRequest(new { 
+			error = "Credenciais inválidas.", 
+			message = "Email ou senha incorretos." 
+		});
+	}
+
+	// Verificar senha (comparação simples - em produção usar hash)
+	if (user.Password != loginRequest.Password)
+	{
+		return Results.BadRequest(new { 
+			error = "Credenciais inválidas.", 
+			message = "Email ou senha incorretos." 
+		});
+	}
+
+	// Login bem-sucedido
+	var loginResponse = new LoginResponse
+	{
+		Id = user.Id,
+		Name = user.Name,
+		Email = user.Email,
+		CreatedAt = user.CreatedAt,
+		Message = "Login realizado com sucesso!"
+	};
+
+	return Results.Ok(loginResponse);
+});
+
 // ==================== ENDPOINTS DE MEDIA ====================
 
 app.MapGet("/media/listar", ([FromServices] AppDataContext ctx) =>
@@ -308,7 +353,6 @@ app.MapDelete("/media/remover/{id:int}", ([FromRoute] int id, [FromServices] App
 
 app.MapPost("/reviews/criar", ([FromBody] Review input, [FromServices] AppDataContext ctx) =>
 {
-	// Validações
 	if (input.Rating < 0 || input.Rating > 5)
 		return Results.BadRequest(new { errors = new[] { "A nota deve estar entre 0 e 5." } });
 	
@@ -318,17 +362,14 @@ app.MapPost("/reviews/criar", ([FromBody] Review input, [FromServices] AppDataCo
 	if (input.Comment.Length > 1000)
 		return Results.BadRequest(new { errors = new[] { "O comentário não pode exceder 1000 caracteres." } });
 	
-	// Verificar se usuário existe
 	var user = ctx.Usuarios?.Find(input.UserId);
 	if (user == null)
 		return Results.NotFound(new { error = "Usuário não encontrado." });
 	
-	// Verificar se mídia existe
 	var media = ctx.Medias?.Find(input.MediaId);
 	if (media == null)
 		return Results.NotFound(new { error = "Mídia não encontrada." });
 	
-	// Verificar se usuário já avaliou esta mídia
 	var existingReview = ctx.Reviews?
 		.FirstOrDefault(r => r.UserId == input.UserId && r.MediaId == input.MediaId);
 	
@@ -468,7 +509,6 @@ app.MapPut("/reviews/atualizar/{id:int}", (int id, [FromBody] Review input, [Fro
 	if (review == null)
 		return Results.NotFound(new { error = "Avaliação não encontrada." });
 	
-	// Validações
 	if (input.Rating < 0 || input.Rating > 5)
 		return Results.BadRequest(new { errors = new[] { "A nota deve estar entre 0 e 5." } });
 	

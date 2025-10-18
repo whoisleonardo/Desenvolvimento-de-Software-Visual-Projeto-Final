@@ -1,0 +1,223 @@
+@baseUrl = http://localhost:5116
+
+##########################################
+### 1. VERIFICAÇÃO INICIAL DA API
+##########################################
+
+### 1.1 Verificar se a API está funcionando
+GET {{baseUrl}}/
+Content-Type: application/json
+
+##########################################
+### 2. TESTES DE USUÁRIOS
+##########################################
+
+### 2.1 Listar usuários (inicialmente vazio)
+GET {{baseUrl}}/users/listar
+Content-Type: application/json
+
+### 2.2 Registrar primeiro usuário
+POST {{baseUrl}}/users/registrar
+Content-Type: application/json
+
+{
+  "name": "João Silva",
+  "email": "joao@email.com",
+  "password": "senha123"
+}
+
+### 2.3 Registrar segundo usuário
+POST {{baseUrl}}/users/registrar
+Content-Type: application/json
+
+{
+  "name": "Maria Santos",
+  "email": "maria@email.com",
+  "password": "senha456"
+}
+
+### 2.4 Listar usuários (agora com dados)
+GET {{baseUrl}}/users/listar
+Content-Type: application/json
+
+### 2.5 Atualizar usuário (PUT)
+PUT {{baseUrl}}/users/atualizar/1
+Content-Type: application/json
+
+{
+  "name": "João Silva Atualizado",
+  "email": "joao.novo@email.com",
+  "password": "novaSenha789"
+}
+
+### 2.6 Alterar usuário parcialmente (PATCH)
+PATCH {{baseUrl}}/users/alterar/1
+Content-Type: application/json
+
+{
+  "name": "João Silva Modificado"
+}
+
+##########################################
+### 3. TESTES DE LOGIN
+##########################################
+
+### 3.1 Login com sucesso
+POST {{baseUrl}}/users/login
+Content-Type: application/json
+
+{
+  "email": "joao.novo@email.com",
+  "password": "novaSenha789"
+}
+
+### 3.2 Login com senha incorreta (deve falhar)
+POST {{baseUrl}}/users/login
+Content-Type: application/json
+
+{
+  "email": "joao.novo@email.com",
+  "password": "senha_errada"
+}
+
+### 3.3 Login com email inexistente (deve falhar)
+POST {{baseUrl}}/users/login
+Content-Type: application/json
+
+{
+  "email": "inexistente@email.com",
+  "password": "senha123"
+}
+
+##########################################
+### 4. TESTES DE MÍDIA
+##########################################
+
+### 4.1 Listar mídias (inicialmente vazio)
+GET {{baseUrl}}/media/listar
+Content-Type: application/json
+
+### 4.2 Criar primeira mídia
+POST {{baseUrl}}/media/criar
+Content-Type: application/json
+
+{
+  "title": "Vingadores: Ultimato",
+  "description": "Filme épico de super-heróis da Marvel com batalha final contra Thanos",
+  "userId": 1
+}
+
+### 4.3 Criar segunda mídia
+POST {{baseUrl}}/media/criar
+Content-Type: application/json
+
+{
+  "title": "Breaking Bad",
+  "description": "Série dramática sobre um professor de química que se torna fabricante de metanfetamina",
+  "userId": 1
+}
+
+### 4.4 Criar terceira mídia
+POST {{baseUrl}}/media/criar
+Content-Type: application/json
+
+{
+  "title": "The Witcher",
+  "description": "Série de fantasia baseada nos livros de Andrzej Sapkowski",
+  "userId": 1
+}
+
+### 4.5 Listar mídias (agora com dados)
+GET {{baseUrl}}/media/listar
+Content-Type: application/json
+
+### 4.6 Pesquisar mídia específica por ID
+GET {{baseUrl}}/media/pesquisar/1
+Content-Type: application/json
+
+### 4.7 Atualizar mídia
+PUT {{baseUrl}}/media/atualizar/1
+Content-Type: application/json
+
+{
+  "title": "Vingadores: Ultimato - Edição Especial",
+  "description": "Filme épico de super-heróis com cenas extras e comentários dos diretores",
+  "userId": 1
+}
+
+### 4.8 Remover mídia
+DELETE {{baseUrl}}/media/remover/3
+
+##########################################
+### 5. TESTES DE REVIEWS
+##########################################
+
+### 5.1 Listar reviews (inicialmente vazio)
+GET {{baseUrl}}/reviews/listar
+Content-Type: application/json
+
+### 5.2 Criar primeira review
+POST {{baseUrl}}/reviews/criar
+Content-Type: application/json
+
+{
+  "rating": 4.5,
+  "comment": "Filme incrível! Os efeitos especiais são de tirar o fôlego e a história é emocionante do início ao fim.",
+  "userId": 1,
+  "mediaId": 1
+}
+
+### 5.3 Criar segunda review
+POST {{baseUrl}}/reviews/criar
+Content-Type: application/json
+
+{
+  "rating": 5.0,
+  "comment": "Breaking Bad é simplesmente a melhor série já feita. A evolução do personagem principal é magistral.",
+  "userId": 1,
+  "mediaId": 2
+}
+
+### 5.4 Criar review do segundo usuário
+POST {{baseUrl}}/reviews/criar
+Content-Type: application/json
+
+{
+  "rating": 4.0,
+  "comment": "Muito bom filme, mas poderia ter sido mais curto. Ainda assim recomendo!",
+  "userId": 2,
+  "mediaId": 1
+}
+
+### 5.5 Listar todas as reviews
+GET {{baseUrl}}/reviews/listar
+Content-Type: application/json
+
+### 5.6 Pesquisar review específica
+GET {{baseUrl}}/reviews/pesquisar/1
+Content-Type: application/json
+
+### 5.7 Ver reviews de uma mídia específica (com média)
+GET {{baseUrl}}/reviews/media/1
+Content-Type: application/json
+
+### 5.8 Ver reviews de um usuário específico
+GET {{baseUrl}}/reviews/usuario/1
+Content-Type: application/json
+
+### 5.9 Atualizar review
+PUT {{baseUrl}}/reviews/atualizar/1
+Content-Type: application/json
+
+{
+  "rating": 5.0,
+  "comment": "Mudei minha opinião! Este filme é uma obra-prima absoluta. Merece nota máxima!"
+}
+
+### 5.10 Ver mídia atualizada (média deve ter mudado)
+GET {{baseUrl}}/media/pesquisar/1
+Content-Type: application/json
+
+### 5.11 Remover uma review
+DELETE {{baseUrl}}/reviews/remover/2
+

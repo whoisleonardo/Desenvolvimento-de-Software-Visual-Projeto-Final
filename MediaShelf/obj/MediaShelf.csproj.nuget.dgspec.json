@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Desenvolvimento-de-Software-Visual-Projeto-Final\\MediaShelf\\MediaShelf.csproj": {}
+    "C:\\Users\\leo\\Documents\\MediaShelf\\MediaShelf\\MediaShelf.csproj": {}
   },
   "projects": {
-    "D:\\Desenvolvimento-de-Software-Visual-Projeto-Final\\MediaShelf\\MediaShelf.csproj": {
+    "C:\\Users\\leo\\Documents\\MediaShelf\\MediaShelf\\MediaShelf.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Desenvolvimento-de-Software-Visual-Projeto-Final\\MediaShelf\\MediaShelf.csproj",
+        "projectUniqueName": "C:\\Users\\leo\\Documents\\MediaShelf\\MediaShelf\\MediaShelf.csproj",
         "projectName": "MediaShelf",
-        "projectPath": "D:\\Desenvolvimento-de-Software-Visual-Projeto-Final\\MediaShelf\\MediaShelf.csproj",
-        "packagesPath": "C:\\Users\\Pichau\\.nuget\\packages\\",
-        "outputPath": "D:\\Desenvolvimento-de-Software-Visual-Projeto-Final\\MediaShelf\\obj\\",
+        "projectPath": "C:\\Users\\leo\\Documents\\MediaShelf\\MediaShelf\\MediaShelf.csproj",
+        "packagesPath": "C:\\Users\\leo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\leo\\Documents\\MediaShelf\\MediaShelf\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Pichau\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\leo\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -81,7 +81,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.415/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

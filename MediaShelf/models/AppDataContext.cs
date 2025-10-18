@@ -16,7 +16,6 @@ namespace MediaShelf.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configurar relacionamentos
             modelBuilder.Entity<Media>()
                 .HasOne(m => m.User)
                 .WithMany()
@@ -35,7 +34,6 @@ namespace MediaShelf.Models
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Índice único: um usuário só pode avaliar uma mídia uma vez
             modelBuilder.Entity<Review>()
                 .HasIndex(r => new { r.UserId, r.MediaId })
                 .IsUnique();
