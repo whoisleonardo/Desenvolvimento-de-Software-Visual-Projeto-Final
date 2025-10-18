@@ -1,14 +1,15 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 
-namespace MediaShelf.models;
-
-public class AppDataContext : DbContext
+namespace MediaShelf.Models
 {
-    public DbSet<User> Usuarios { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public class AppDataContext : DbContext
     {
-        optionsBuilder.UseSqlite("Data Source=MediaShelf.db");
+        public DbSet<User>? Usuarios { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlite("Data Source=MediaShelf.db");
+        }
     }
 }

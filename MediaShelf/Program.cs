@@ -1,44 +1,126 @@
+using System;
+using System.ComponentModel.DataAnnotations;
+using MediaShelf.Models;
+using Microsoft.AspNetCore.Mvc;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<AppDataContext>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+var users = new List<User>();
+var nextId = 1;
+users.Add(new User
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+	Id = nextId++,
+	Name = "Usuário de Teste",
+	Email = "teste@example.com",
+	Password = null,
+	CreatedAt = DateTime.Now
+});
 
-app.UseHttpsRedirection();
+app.MapGet("/", () => Results.Ok(new { message = "MediaShelf API" }));
 
-var summaries = new[]
+app.MapPost("/users", (User input) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+	var validationResults = new List<ValidationResult>();
+	var ctx = new ValidationContext(input);
+	if (!Validator.TryValidateObject(input, ctx, validationResults, true))
+	{
+		var errors = validationResults.Select(v => v.ErrorMessage).ToArray();
+		return Results.BadRequest(new { errors });
+	}
+	if (string.IsNullOrWhiteSpace(input.Email) || !input.Email.Contains("@"))
+	{
+		return Results.BadRequest(new { errors = new[] { "Email deve conter '@'." } });
+	}
 
-app.MapGet("/weatherforecast", () =>
+	if (string.IsNullOrWhiteSpace(input.Name))
+	{
+		return Results.BadRequest(new { errors = new[] { "Name não pode ser vazio." } });
+	}
+
+	input.Id = nextId++;
+	input.CreatedAt = DateTime.Now;
+	users.Add(input);
+
+	return Results.Created($"/users/{input.Id}", input);
+});
+
+app.MapGet("/users", () => Results.Ok(users));
+app.MapGet("/users/{name}", (string name) =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+	var user = users.FirstOrDefault(u => string.Equals(u.Name, name, StringComparison.OrdinalIgnoreCase));
+	return user is not null ? Results.Ok(user) : Results.NotFound(new { error = "Usuário não encontrado." });
+});
+
+app.MapPut("/users/{id:int}", (int id, User input) =>
+{
+	var existing = users.FirstOrDefault(u => u.Id == id);
+	if (existing is null)
+		return Results.NotFound(new { error = "Usuário não encontrado." });
+
+	var validationResults = new List<ValidationResult>();
+	var ctx = new ValidationContext(input);
+	if (!Validator.TryValidateObject(input, ctx, validationResults, true))
+	{
+		var errors = validationResults.Select(v => v.ErrorMessage).ToArray();
+		return Results.BadRequest(new { errors });
+	}
+
+	if (string.IsNullOrWhiteSpace(input.Email) || !input.Email.Contains("@"))
+		return Results.BadRequest(new { errors = new[] { "Email deve conter '@'." } });
+
+	if (string.IsNullOrWhiteSpace(input.Name))
+		return Results.BadRequest(new { errors = new[] { "Name não pode ser vazio." } });
+
+	existing.Name = input.Name;
+	existing.Email = input.Email;
+	existing.Password = input.Password;
+
+	return Results.Ok(existing);
+});
+
+app.MapDelete("/users/{id:int}", (int id) =>
+{
+	var existing = users.FirstOrDefault(u => u.Id == id);
+	if (existing is null)
+		return Results.NotFound(new { error = "Usuário não encontrado." });
+
+	users.Remove(existing);
+	return Results.NoContent();
+});
+
+app.MapDelete("/api/usuario/remover/{id}", ([FromRoute] int id, [FromServices] AppDataContext ctx) =>
+{
+	var usuario = ctx.Usuarios?.Find(id);
+	if (usuario is null)
+	{
+		return Results.NotFound("Usuário não encontrado");
+	}
+	ctx.Usuarios!.Remove(usuario);
+	ctx.SaveChanges();
+	return Results.Ok(usuario);
+});
+
+app.MapPatch("/api/usuario/alterar/{id}", ([FromRoute] int id, [FromBody] User usuarioAlterado, [FromServices] AppDataContext ctx) =>
+{
+	var resultado = ctx.Usuarios?.Find(id);
+	if (resultado is null)
+	{
+		return Results.NotFound("Usuário não encontrado");
+	}
+	resultado.Name = usuarioAlterado.Name;
+	resultado.Email = usuarioAlterado.Email;
+	resultado.Password = usuarioAlterado.Password;
+	ctx.Usuarios!.Update(resultado);
+	ctx.SaveChanges();
+	return Results.Ok(resultado);
+});
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+
