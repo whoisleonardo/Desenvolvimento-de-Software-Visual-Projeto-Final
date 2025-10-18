@@ -267,3 +267,30 @@ C:\Users\PC\Desktop\Projeto certo\Desenvolvimento-de-Software-Visual-Projeto-Fin
 C:\Users\PC\Desktop\Projeto certo\Desenvolvimento-de-Software-Visual-Projeto-Final\MediaShelf\obj\Debug\net8.0\MediaShelf.csproj.CopyComplete
 C:\Users\PC\Desktop\Projeto certo\Desenvolvimento-de-Software-Visual-Projeto-Final\MediaShelf\obj\Debug\net8.0\MediaShelf.genruntimeconfig.cache
 C:\Users\PC\Desktop\Projeto certo\Desenvolvimento-de-Software-Visual-Projeto-Final\MediaShelf\obj\Debug\net8.0\ref\MediaShelf.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\Microsoft.Build.Locator.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\Microsoft.CodeAnalysis.Workspaces.MSBuild.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\Microsoft.Extensions.Caching.Abstractions.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\System.IO.Pipelines.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\System.Text.Encodings.Web.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\System.Text.Json.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\runtimes\linux-musl-s390x\native\libe_sqlite3.so
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
+C:\Users\leo\Documents\MediaShelf\MediaShelf\obj\Debug\net8.0\MediaShelf.sourcelink.json
+C:\Users\leo\Documents\MediaShelf\MediaShelf\bin\Debug\net8.0\MediaShelf.staticwebassets.runtime.json

@@ -1,11 +1,19 @@
 {
   "Version": 1,
-  "Hash": "K0ZAC/kuhz0aXa0n/8f8BFOtgl/DokpMwFbTTZg8noU=",
+  "Hash": "zgnO130//vvwg3+S1lEydqN10b4XnXK8ubIisCevZzQ=",
   "Source": "MediaShelf",
   "BasePath": "_content/MediaShelf",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "MediaShelf\\wwwroot",
+      "Source": "MediaShelf",
+      "ContentRoot": "C:\\Users\\leo\\Documents\\MediaShelf\\MediaShelf\\wwwroot\\",
+      "BasePath": "_content/MediaShelf",
+      "Pattern": "**"
+    }
+  ],
   "Assets": []
 }
