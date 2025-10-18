@@ -9,10 +9,13 @@ namespace MediaShelf.Models
         [Key]
         public int Id { get; set; }
 
-        [Range(1, 5, ErrorMessage = "Rating deve ser entre 1 e 5.")]
-        public int Rating { get; set; }
+        [Required(ErrorMessage = "Rating é obrigatório.")]
+        [Range(0, 5, ErrorMessage = "Rating deve ser entre 0 e 5.")]
+        public double Rating { get; set; }
 
-        public string? Comment { get; set; }
+        [Required(ErrorMessage = "Comment é obrigatório.")]
+        [MaxLength(1000, ErrorMessage = "O comentário não pode exceder 1000 caracteres.")]
+        public string Comment { get; set; } = string.Empty;
 
         [Required]
         public int MediaId { get; set; }

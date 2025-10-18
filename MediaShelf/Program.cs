@@ -13,6 +13,8 @@ var app = builder.Build();
 
 app.MapGet("/", () => Results.Ok(new { message = "MediaShelf API" }));
 
+// ==================== ENDPOINTS DE USERS ====================
+
 app.MapGet("/users/listar", ([FromServices] AppDataContext ctx) =>
 {
 	var users = ctx.Usuarios?.ToList() ?? new List<User>();
@@ -138,7 +140,7 @@ app.MapGet("/media/listar", ([FromServices] AppDataContext ctx) =>
 			//m.CoverImagePath,
 			m.CreatedAt,
 			User = new { m.User.Id, m.User.Name, m.User.Email },
-			AverageRating = m.Reviews.Any() ? Math.Round(m.Reviews.Average(r => r.Rating), 1) : 0,
+			AverageRating = m.Reviews.Any() ? Math.Round(m.Reviews.Average(r => r.Rating), 2) : 0,
 			TotalReviews = m.Reviews.Count
 		})
 		.ToList();
@@ -164,7 +166,7 @@ app.MapGet("/media/pesquisar/{id:int}", (int id, [FromServices] AppDataContext c
 			//m.CoverImagePath,
 			m.CreatedAt,
 			User = new { m.User.Id, m.User.Name, m.User.Email },
-			AverageRating = m.Reviews.Any() ? Math.Round(m.Reviews.Average(r => r.Rating), 1) : 0,
+			AverageRating = m.Reviews.Any() ? Math.Round(m.Reviews.Average(r => r.Rating), 2) : 0,
 			TotalReviews = m.Reviews.Count,
 			Reviews = m.Reviews.Select(r => new
 			{
@@ -302,6 +304,208 @@ app.MapDelete("/media/remover/{id:int}", ([FromRoute] int id, [FromServices] App
 	return Results.Ok(new { message = "Mídia removida com sucesso.", media });
 });
 
+// ==================== ENDPOINTS DE REVIEWS ====================
+
+app.MapPost("/reviews/criar", ([FromBody] Review input, [FromServices] AppDataContext ctx) =>
+{
+	// Validações
+	if (input.Rating < 0 || input.Rating > 5)
+		return Results.BadRequest(new { errors = new[] { "A nota deve estar entre 0 e 5." } });
+	
+	if (string.IsNullOrWhiteSpace(input.Comment))
+		return Results.BadRequest(new { errors = new[] { "O comentário não pode ser vazio." } });
+	
+	if (input.Comment.Length > 1000)
+		return Results.BadRequest(new { errors = new[] { "O comentário não pode exceder 1000 caracteres." } });
+	
+	// Verificar se usuário existe
+	var user = ctx.Usuarios?.Find(input.UserId);
+	if (user == null)
+		return Results.NotFound(new { error = "Usuário não encontrado." });
+	
+	// Verificar se mídia existe
+	var media = ctx.Medias?.Find(input.MediaId);
+	if (media == null)
+		return Results.NotFound(new { error = "Mídia não encontrada." });
+	
+	// Verificar se usuário já avaliou esta mídia
+	var existingReview = ctx.Reviews?
+		.FirstOrDefault(r => r.UserId == input.UserId && r.MediaId == input.MediaId);
+	
+	if (existingReview != null)
+		return Results.BadRequest(new { errors = new[] { "Você já avaliou esta mídia. Use PUT para atualizar." } });
+	
+	var review = new Review
+	{
+		Rating = input.Rating,
+		Comment = input.Comment,
+		UserId = input.UserId,
+		MediaId = input.MediaId,
+		CreatedAt = DateTime.Now
+	};
+	
+	ctx.Reviews!.Add(review);
+	ctx.SaveChanges();
+	
+	return Results.Created($"/reviews/{review.Id}", new
+	{
+		review.Id,
+		review.Rating,
+		review.Comment,
+		review.CreatedAt,
+		review.UserId,
+		UserName = user.Name,
+		review.MediaId,
+		MediaTitle = media.Title
+	});
+});
+
+app.MapGet("/reviews/listar", ([FromServices] AppDataContext ctx) =>
+{
+	if (ctx.Reviews == null)
+		return Results.Ok(new List<object>());
+	
+	var reviews = ctx.Reviews
+		.Include(r => r.User)
+		.Include(r => r.Media)
+		.Select(r => new
+		{
+			r.Id,
+			r.Rating,
+			r.Comment,
+			r.CreatedAt,
+			User = new { r.User.Id, r.User.Name },
+			Media = new { r.Media.Id, r.Media.Title }
+		})
+		.ToList();
+	
+	return Results.Ok(reviews);
+});
+
+app.MapGet("/reviews/pesquisar/{id:int}", (int id, [FromServices] AppDataContext ctx) =>
+{
+	if (ctx.Reviews == null)
+		return Results.NotFound(new { error = "Avaliação não encontrada." });
+	
+	var review = ctx.Reviews
+		.Include(r => r.User)
+		.Include(r => r.Media)
+		.Where(r => r.Id == id)
+		.Select(r => new
+		{
+			r.Id,
+			r.Rating,
+			r.Comment,
+			r.CreatedAt,
+			User = new { r.User.Id, r.User.Name },
+			Media = new { r.Media.Id, r.Media.Title }
+		})
+		.FirstOrDefault();
+	
+	if (review == null)
+		return Results.NotFound(new { error = "Avaliação não encontrada." });
+	
+	return Results.Ok(review);
+});
+
+app.MapGet("/reviews/media/{mediaId:int}", (int mediaId, [FromServices] AppDataContext ctx) =>
+{
+	if (ctx.Medias == null)
+		return Results.NotFound(new { error = "Mídia não encontrada." });
+	
+	var media = ctx.Medias
+		.Include(m => m.Reviews)
+		.ThenInclude(r => r.User)
+		.FirstOrDefault(m => m.Id == mediaId);
+	
+	if (media == null)
+		return Results.NotFound(new { error = "Mídia não encontrada." });
+	
+	var reviews = media.Reviews.Select(r => new
+	{
+		r.Id,
+		r.Rating,
+		r.Comment,
+		r.CreatedAt,
+		User = new { r.User.Id, r.User.Name }
+	}).ToList();
+	
+	return Results.Ok(new
+	{
+		MediaId = mediaId,
+		MediaTitle = media.Title,
+		AverageRating = reviews.Any() ? Math.Round(reviews.Average(r => r.Rating), 2) : 0,
+		TotalReviews = reviews.Count,
+		Reviews = reviews
+	});
+});
+
+app.MapGet("/reviews/usuario/{userId:int}", (int userId, [FromServices] AppDataContext ctx) =>
+{
+	if (ctx.Reviews == null)
+		return Results.Ok(new List<object>());
+	
+	var reviews = ctx.Reviews
+		.Include(r => r.User)
+		.Include(r => r.Media)
+		.Where(r => r.UserId == userId)
+		.Select(r => new
+		{
+			r.Id,
+			r.Rating,
+			r.Comment,
+			r.CreatedAt,
+			Media = new { r.Media.Id, r.Media.Title }
+		})
+		.ToList();
+	
+	return Results.Ok(reviews);
+});
+
+app.MapPut("/reviews/atualizar/{id:int}", (int id, [FromBody] Review input, [FromServices] AppDataContext ctx) =>
+{
+	var review = ctx.Reviews?.Find(id);
+	if (review == null)
+		return Results.NotFound(new { error = "Avaliação não encontrada." });
+	
+	// Validações
+	if (input.Rating < 0 || input.Rating > 5)
+		return Results.BadRequest(new { errors = new[] { "A nota deve estar entre 0 e 5." } });
+	
+	if (!string.IsNullOrWhiteSpace(input.Comment))
+	{
+		if (input.Comment.Length > 1000)
+			return Results.BadRequest(new { errors = new[] { "O comentário não pode exceder 1000 caracteres." } });
+		
+		review.Comment = input.Comment;
+	}
+	
+	review.Rating = input.Rating;
+	
+	ctx.Reviews!.Update(review);
+	ctx.SaveChanges();
+	
+	return Results.Ok(new
+	{
+		review.Id,
+		review.Rating,
+		review.Comment,
+		review.CreatedAt,
+		review.UserId,
+		review.MediaId
+	});
+});
+
+app.MapDelete("/reviews/remover/{id:int}", (int id, [FromServices] AppDataContext ctx) =>
+{
+	var review = ctx.Reviews?.Find(id);
+	if (review == null)
+		return Results.NotFound(new { error = "Avaliação não encontrada." });
+	
+	ctx.Reviews!.Remove(review);
+	ctx.SaveChanges();
+	
+	return Results.Ok(new { message = "Avaliação removida com sucesso.", review });
+});
+
 app.Run();
-
-

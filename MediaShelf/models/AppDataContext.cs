@@ -33,7 +33,12 @@ namespace MediaShelf.Models
                 .HasOne(r => r.User)
                 .WithMany()
                 .HasForeignKey(r => r.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Índice único: um usuário só pode avaliar uma mídia uma vez
+            modelBuilder.Entity<Review>()
+                .HasIndex(r => new { r.UserId, r.MediaId })
+                .IsUnique();
         }
     }
 }
