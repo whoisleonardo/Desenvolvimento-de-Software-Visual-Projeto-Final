@@ -126,7 +126,6 @@ app.MapPatch("/users/alterar/{id:int}", ([FromRoute] int id, [FromBody] User usu
 
 app.MapPost("/users/login", ([FromBody] LoginRequest loginRequest, [FromServices] AppDataContext ctx) =>
 {
-	// Validação dos dados de entrada
 	var validationResults = new List<ValidationResult>();
 	var validationContext = new ValidationContext(loginRequest);
 	if (!Validator.TryValidateObject(loginRequest, validationContext, validationResults, true))
@@ -135,7 +134,6 @@ app.MapPost("/users/login", ([FromBody] LoginRequest loginRequest, [FromServices
 		return Results.BadRequest(new { errors });
 	}
 
-	// Buscar usuário pelo email
 	var user = ctx.Usuarios?.FirstOrDefault(u => u.Email == loginRequest.Email);
 	if (user == null)
 	{
@@ -145,7 +143,6 @@ app.MapPost("/users/login", ([FromBody] LoginRequest loginRequest, [FromServices
 		});
 	}
 
-	// Verificar senha (comparação simples - em produção usar hash)
 	if (user.Password != loginRequest.Password)
 	{
 		return Results.BadRequest(new { 
@@ -154,7 +151,6 @@ app.MapPost("/users/login", ([FromBody] LoginRequest loginRequest, [FromServices
 		});
 	}
 
-	// Login bem-sucedido
 	var loginResponse = new LoginResponse
 	{
 		Id = user.Id,
