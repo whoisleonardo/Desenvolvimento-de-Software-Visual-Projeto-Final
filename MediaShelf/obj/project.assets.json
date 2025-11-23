@@ -3657,19 +3657,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\PC\\.nuget\\packages\\": {}
+    "C:\\Users\\leo\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\PC\\Desktop\\Projeto certo\\Desenvolvimento-de-Software-Visual-Projeto-Final\\MediaShelf\\MediaShelf.csproj",
+      "projectUniqueName": "C:\\Users\\leo\\Documents\\MediaShelf\\MediaShelf\\MediaShelf.csproj",
       "projectName": "MediaShelf",
-      "projectPath": "C:\\Users\\PC\\Desktop\\Projeto certo\\Desenvolvimento-de-Software-Visual-Projeto-Final\\MediaShelf\\MediaShelf.csproj",
-      "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\PC\\Desktop\\Projeto certo\\Desenvolvimento-de-Software-Visual-Projeto-Final\\MediaShelf\\obj\\",
+      "projectPath": "C:\\Users\\leo\\Documents\\MediaShelf\\MediaShelf\\MediaShelf.csproj",
+      "packagesPath": "C:\\Users\\leo\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\leo\\Documents\\MediaShelf\\MediaShelf\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\leo\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -3687,6 +3687,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -3731,7 +3736,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.121/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

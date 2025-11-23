@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { reviewApi } from '@/services/api';
@@ -13,13 +13,7 @@ export default function MyReviews() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (user) {
-      loadReviews();
-    }
-  }, [user]);
-
-  const loadReviews = async () => {
+  const loadReviews = useCallback(async () => {
     if (!user) return;
     try {
       const data = await reviewApi.getByUser(user.id);
@@ -29,7 +23,13 @@ export default function MyReviews() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      loadReviews();
+    }
+  }, [user, loadReviews]);
 
   return (
     <div className="min-h-screen bg-background">

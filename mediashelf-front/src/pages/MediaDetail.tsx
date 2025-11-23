@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { mediaApi, reviewApi } from '@/services/api';
 import { useAuth } from '@/contexts/AuthContext';
@@ -23,13 +23,7 @@ export default function MediaDetail() {
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (id) {
-      loadMedia();
-    }
-  }, [id]);
-
-  const loadMedia = async () => {
+  const loadMedia = useCallback(async () => {
     try {
       const data = await mediaApi.getById(Number(id));
       setMedia(data);
@@ -42,7 +36,13 @@ export default function MediaDetail() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, toast]);
+
+  useEffect(() => {
+    if (id) {
+      loadMedia();
+    }
+  }, [id, loadMedia]);
 
   const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
